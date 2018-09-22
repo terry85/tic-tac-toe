@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>tic_tac_toe</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #game {
+                float:left;
+                position:relative;
+                
+               
+                    
+            } 
+            table {
+                border-collapse: collapse;
+                border:1px solid black;
+                
+            }
+            td {
+                width: 50px;
+                height: 50px;
+                border:3px solid black;
+                
+                    
+            }
+            td:hover {
+                background-color: #B0C4DE;
+            }
+            #result {
+                float:right;
+                border: 1px solid black;
+                padding-left: 41px;
+                margin-right: 10px;
+                width: 157px;
+            }
+            #main {
+                margin:auto;
+                
+            }
+            #wrapper {
+                margin: auto;
+                width: 240px;
+            }
+            button {
+                margin-top: 20px;
+                position:absolute;
+                position: absolute;
+                left: 52px;
+                
+                
+            }
+            #notification {
+                margin-top: 25px;
+                text-align:center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="main">
+            <div id="wrapper">
+                <div id="game">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <div id='notification'> <b>X's</b> turn</div>
+                    <button> Restart </button>
+                </div>
+                
+            </div>
+            <div id="result">
+                <p><b>Scores:</b></p>
+                <p>Player <b>X</b>:</p>
+                <p>Player <b>O</b>:</p>
+                <p>Draw:</p>
+            </div>
+            
+        </div>
+       
+    </body>
+</html>
