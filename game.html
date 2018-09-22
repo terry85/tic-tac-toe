@@ -26,6 +26,7 @@ and open the template in the editor.
                 width: 50px;
                 height: 50px;
                 border:3px solid black;
+                text-align: center;
                 
                     
             }
@@ -82,19 +83,90 @@ and open the template in the editor.
                             <td></td>
                         </tr>
                     </table>
-                    <div id='notification'> <b>X's</b> turn</div>
+                    <div id='notification'> <span id="player"><b>X's</b></span> turn</div>
                     <button> Restart </button>
                 </div>
                 
             </div>
             <div id="result">
                 <p><b>Scores:</b></p>
-                <p>Player <b>X</b>:</p>
+                <p>Player <b>X</b>: </p>
                 <p>Player <b>O</b>:</p>
                 <p>Draw:</p>
             </div>
             
         </div>
+        <script>
+            player_x_score =0;
+            
+            player_y_score =0;
+            var turn = true;
+            var elements = document.getElementsByTagName('td');
+            var table = document.getElementsByTagName('table');
+            var notification =document.getElementById('notification');
+             console.log(table);
+             console.log(table[0].rows[0].cells[1].innerHTML);
+            var player = document.getElementById('player');
+            console.log(elements);
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener('click', func);
+                
+}
+function func() {
+    if(turn===true) {
+        this.innerHTML = "X";
+        player.innerHTML= "O's";
+        return turn=false;
+        
+    }
+    
+    if(turn === false) {
+        this.innerHTML = "O";
+        player.innerHTML= "X's";
+        return turn=true;
+    }
+}
+table[0].addEventListener('click', Winner)
+
+var  figureCount = 0;
+
+function Winner() {
+    for (var i = 0; i < table[0].rows.length; i++) {
+        figureCount = 0;
+        b=0;
+        c=2;
+        if(i>0) {
+            c=0;
+        }
+       
+        for (var j = 0; j < table[0].rows[i].cells.length; j++) {
+            
+            if (i ==0 && j !=0 && j<3) {
+                b++;
+                c--;
+            }
+
+            //console.log("i: " + i + ", j: " + j + ", c: " + c);
+                
+            if (table[0].rows[i].cells[j].innerHTML == "X" || table[0].rows[j].cells[i].innerHTML =="X"|| table[0].rows[i+b].cells[j].innerHTML == "X"|| table[0].rows[j].cells[i+c].innerHTML == "X" ){
+                figureCount++;
+            }
+            
+            //console.log("i: " + i + ", j: " + j + ", figureCount: " + figureCount);
+            
+            if (figureCount == 3) {
+                notification.innerHTML = "X has won !" ;
+                var x = notification.innerHTML;
+                count(x);
+            }
+            
+        }
+    }
+}
+
+function count(x) {
+}
+        </script>
        
     </body>
 </html>
