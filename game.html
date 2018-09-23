@@ -83,90 +83,182 @@ and open the template in the editor.
                             <td></td>
                         </tr>
                     </table>
-                    <div id='notification'> <span id="player"><b>X's</b></span> turn</div>
-                    <button> Restart </button>
+                    <div id='notification'>  </div>
+                    <button id="clear"> Restart </button>
                 </div>
                 
             </div>
             <div id="result">
                 <p><b>Scores:</b></p>
-                <p>Player <b>X</b>: </p>
-                <p>Player <b>O</b>:</p>
-                <p>Draw:</p>
+                <p>Player <b>X: </b><span id="score_display_x"> </span></p>
+                <p>Player <b>O: </b> <span id="score_display_o"> </span></p>
+                <p>Draw: <span id="draw"> </span></p>
             </div>
             
         </div>
         <script>
-            player_x_score =0;
+            player_x_score = 0;
+            score_x = document.getElementById("score_display_x");
+            score_x.innerHTML = player_x_score;
+            player_o_score = 0;
+            score_o = document.getElementById("score_display_o");
+            score_o.innerHTML = player_o_score;
+            draw_score = 0;
+            draw = document.getElementById("draw");
+            draw.innerHTML = draw_score;
+
+            is_in_game = true;
+
+            function startGame() {
+                is_in_game = true;
+                turn = true;
+
+                elements = document.getElementsByTagName('td');
+                table = document.getElementsByTagName('table');
+                notification = document.getElementById('notification');
+
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].addEventListener('click', playerTurn);
+                }
+
+                table[0].addEventListener('click', checkWinner);
+            }
+
+            startGame();
             
-            player_y_score =0;
-            var turn = true;
-            var elements = document.getElementsByTagName('td');
-            var table = document.getElementsByTagName('table');
-            var notification =document.getElementById('notification');
-             console.log(table);
-             console.log(table[0].rows[0].cells[1].innerHTML);
-            var player = document.getElementById('player');
-            console.log(elements);
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].addEventListener('click', func);
+            var clear = document.getElementById("clear");
+            clear.addEventListener('click', clearTable);
+
+            var player_id = "X's turn";
+            notification.innerHTML = player_id;
+
+            function playerTurn() {
+                if (is_in_game != true) {
+                    return;
+                }
+
+                if (turn === true) {
+                    this.innerHTML = "X";
+                    this.removeEventListener("click", playerTurn);
+                    player_id = this.innerHTML;
+                    notification.innerHTML = "O's turn";
+                    turn = false;
+
+                } else {
+                    this.innerHTML = "O";
+                    this.removeEventListener("click", playerTurn);
+                    player_id = this.innerHTML;
+                    notification.innerHTML = "X's turn";
+                    turn = true;
+                }
+            }
+
+            var figureCount_horizontal = 0;
+            var figureCount_vertical = 0;
+            var figureCount_cross_topLeftBottomRight = 0;
+            var figureCount_cross_topRightBottomLeft = 0;
+            full_table = 9;
+
+            function checkWinner() {
+                if (is_in_game != true) {
+                    return;
+                }
+
+                full_table--;
+
+                for (var i = 0; i < table[0].rows.length; i++) {
+                    figureCount_horizontal = 0;
+                    figureCount_vertical = 0;
+                    figureCount_cross_topLeftBottomRight = 0;
+                    figureCount_cross_topRightBottomLeft = 0;
+                    b=0;
+                    c=2;
+
+                    if (i>0) {
+                        c=0;
+                    }
+
+                    for (var j = 0; j < table[0].rows[i].cells.length; j++) {
+
+                        if (i ==0 && j != 0 && j<3) {
+                            b++;
+                            c--;
+                        }
+
+                        //console.log("i: " + i + ", j: " + j + ", c: " + c);
+
+                        /*
+                        console.log("");
+                        console.log("Before - i: " + i + ", j: " + j + ", c: " + c + ", figureCount: " + figureCount);
+                        console.log( "rows[" + i + "].cells[" + j + "].innerHTML == player_id " + ( table[0].rows[i].cells[j].innerHTML == player_id ) );
+                        console.log( "rows[" + j + "].cells[" + i + "].innerHTML == player_id " + ( table[0].rows[j].cells[i].innerHTML == player_id ) );
+                        console.log( "rows[" + (i+b) + "].cells[" + j + "].innerHTML == player_id " + ( table[0].rows[i+b].cells[j].innerHTML == player_id ) );
+                        console.log( "rows[" + j + "].cells[" + (i+c) + "].innerHTML == player_id " + ( table[0].rows[j].cells[i+c].innerHTML == player_id ) );
+                        */
+
+                        if (table[0].rows[i].cells[j].innerHTML == player_id) {
+                            figureCount_horizontal++;
+                        }
+
+                        if (table[0].rows[j].cells[i].innerHTML == player_id){
+                            figureCount_vertical++;
+                        }
+
+                        if (table[0].rows[i+b].cells[j].innerHTML == player_id) {
+                            figureCount_cross_topLeftBottomRight++;
+                        }
+
+                        if (table[0].rows[j].cells[i+c].innerHTML == player_id ) {
+                            figureCount_cross_topRightBottomLeft++;
+                        }
+
+                        if (figureCount_horizontal == 3 || figureCount_vertical == 3 || figureCount_cross_topLeftBottomRight == 3 || figureCount_cross_topRightBottomLeft == 3) {
+                            notification.innerHTML = player_id + " has won !" ;
+                            var winner= notification.innerHTML;
+                            counterUpdate(winner);
+                            is_in_game = false;
+
+                            return;
+                        }
+                    }
+                }
+
+                if (full_table <= 0) {
+                     notification.innerHTML = "DRAW!";
+                     var winner= notification.innerHTML;
+                     counterUpdate(winner);
+                     is_in_game = false;
+                }
+            }
+
+            function counterUpdate(winner) {
+                if (winner == "X has won !") {
+                    player_x_score++;
+                    score_x.innerHTML = player_x_score;
+                }
+
+                if (winner == "O has won !") {
+                    player_o_score++;
+                    score_o.innerHTML = player_o_score;
+                }
                 
-}
-function func() {
-    if(turn===true) {
-        this.innerHTML = "X";
-        player.innerHTML= "O's";
-        return turn=false;
-        
-    }
-    
-    if(turn === false) {
-        this.innerHTML = "O";
-        player.innerHTML= "X's";
-        return turn=true;
-    }
-}
-table[0].addEventListener('click', Winner)
-
-var  figureCount = 0;
-
-function Winner() {
-    for (var i = 0; i < table[0].rows.length; i++) {
-        figureCount = 0;
-        b=0;
-        c=2;
-        if(i>0) {
-            c=0;
-        }
-       
-        for (var j = 0; j < table[0].rows[i].cells.length; j++) {
-            
-            if (i ==0 && j !=0 && j<3) {
-                b++;
-                c--;
+                 if (winner == "DRAW!") {
+                    draw_score++;
+                    draw.innerHTML = draw_score;
+                }
             }
-
-            //console.log("i: " + i + ", j: " + j + ", c: " + c);
+            
+            function clearTable () {
+                for (var i = 0; i < table[0].rows.length; i++) {
+                    for (var j = 0; j < table[0].rows[i].cells.length; j++) {
+                        table[0].rows[i].cells[j].innerHTML="";
+                    }
+                }
                 
-            if (table[0].rows[i].cells[j].innerHTML == "X" || table[0].rows[j].cells[i].innerHTML =="X"|| table[0].rows[i+b].cells[j].innerHTML == "X"|| table[0].rows[j].cells[i+c].innerHTML == "X" ){
-                figureCount++;
+                notification.innerHTML = "<b>X's</b> turn";
+                full_table = 9;
+                startGame();
             }
-            
-            //console.log("i: " + i + ", j: " + j + ", figureCount: " + figureCount);
-            
-            if (figureCount == 3) {
-                notification.innerHTML = "X has won !" ;
-                var x = notification.innerHTML;
-                count(x);
-            }
-            
-        }
-    }
-}
-
-function count(x) {
-}
         </script>
-       
     </body>
 </html>
