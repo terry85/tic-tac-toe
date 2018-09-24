@@ -157,14 +157,34 @@ and open the template in the editor.
             var figureCount_vertical = 0;
             var figureCount_cross_topLeftBottomRight = 0;
             var figureCount_cross_topRightBottomLeft = 0;
-            full_table = 9;
+            
 
             function checkWinner() {
                 if (is_in_game != true) {
                     return;
                 }
+                
+                var count_td = 0;
+                
+                for (var i = 0; i < table[0].rows.length; i++) {
+                  
+                for (var j = 0; j < table[0].rows[i].cells.length; j++) {
+                    if (table[0].rows[i].cells[j].innerHTML != "") {
+                        count_td++;
+                        console.log(count_td);
+                        if (count_td == 9) {
+                            notification.innerHTML = "DRAW!";
+                            var winner= notification.innerHTML;
+                            counterUpdate(winner);
+                            is_in_game = false;
 
-                full_table--;
+                            return;
+                        }
+                    }
+                        
+                }
+                    
+                }
 
                 for (var i = 0; i < table[0].rows.length; i++) {
                     figureCount_horizontal = 0;
@@ -211,6 +231,8 @@ and open the template in the editor.
                         if (table[0].rows[j].cells[i+c].innerHTML == player_id ) {
                             figureCount_cross_topRightBottomLeft++;
                         }
+                        
+                       
 
                         if (figureCount_horizontal == 3 || figureCount_vertical == 3 || figureCount_cross_topLeftBottomRight == 3 || figureCount_cross_topRightBottomLeft == 3) {
                             notification.innerHTML = player_id + " has won !" ;
@@ -220,15 +242,12 @@ and open the template in the editor.
 
                             return;
                         }
+                        
+                        
                     }
                 }
 
-                if (full_table <= 0) {
-                     notification.innerHTML = "DRAW!";
-                     var winner= notification.innerHTML;
-                     counterUpdate(winner);
-                     is_in_game = false;
-                }
+                
             }
 
             function counterUpdate(winner) {
